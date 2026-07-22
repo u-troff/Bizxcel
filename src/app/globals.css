@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #13293d;
+  --gold: #b4813c;
+  --gold-hover: #9c6e30;
+  --cream: #f7f4ee;
+  --white: #ffffff;
+  --ink: #1e2a35;
+  --body: #4a5560;
+  --muted: #6b7580;
+  --border: #e9e4da;
+  --on-navy: rgba(255, 255, 255, 0.78);
+}
+
+@theme inline {
+  --color-navy: var(--navy);
+  --color-gold: var(--gold);
+  --color-gold-hover: var(--gold-hover);
+  --color-cream: var(--cream);
+  --color-white: var(--white);
+  --color-ink: var(--ink);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-on-navy: var(--on-navy);
+
+  --font-serif: var(--font-lora), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  --container-content: 1200px;
+}
+
+body {
+  background: var(--white);
+  color: var(--body);
+  font-family: var(--font-sans);
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    color: var(--ink);
+  }
+}
+
+/* Scroll-reveal: subtle fade/slide-up, disabled entirely under reduced motion */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce), (scripting: none) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Visible keyboard focus ring, consistent across interactive elements */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--white);
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Trust-badge marquee: duplicated track scrolls left, loops seamlessly at -50% */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 28s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
