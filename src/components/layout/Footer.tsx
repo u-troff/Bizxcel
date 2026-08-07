@@ -73,7 +73,13 @@ export function Footer() {
           <ul className="mt-4 space-y-3 text-sm text-on-navy">
             <li className="flex items-start gap-2.5">
               <MapPinIcon className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-              <span>{site.addressPlaceholder}</span>
+              <address className="not-italic leading-relaxed">
+                {site.address.lines.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </address>
             </li>
             <li className="flex items-center gap-2.5">
               <PhoneIcon className="h-4 w-4 shrink-0 text-gold" />

@@ -17,7 +17,20 @@ export const site = {
   phoneHref: "tel:+27219031612",
   email: "info@bizxcel.co.za",
   hours: "Monday–Friday, 08:00–17:00",
-  addressPlaceholder: "Kuils River, Cape Town: [exact street address to be added]",
+  address: {
+    // `lines` is the display form; the individual fields feed the LocalBusiness
+    // structured data, which needs street and postal code separated out.
+    lines: [
+      "9 Albertersia Crescent, Casa Bella 2",
+      "Hunters Retreat, Kuils River",
+      "Cape Town, Western Cape 7580",
+    ],
+    street: "9 Albertersia Crescent, Casa Bella 2, Hunters Retreat",
+    locality: "Kuils River",
+    region: "Western Cape",
+    postalCode: "7580",
+    country: "ZA",
+  },
   whatsappHref: "https://wa.me/27219031612",
   foundingYear: 2014,
   areaServed: [

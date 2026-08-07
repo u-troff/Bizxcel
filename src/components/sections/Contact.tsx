@@ -13,7 +13,7 @@ export function Contact({
   background?: "white" | "cream";
 }) {
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    "Kuils River, Cape Town"
+    site.address.lines.join(", ")
   )}`;
 
   return (
@@ -33,7 +33,13 @@ export function Contact({
                   <MapPinIcon className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                   <div>
                     <p className="text-sm font-semibold text-ink">Address</p>
-                    <p className="mt-1 text-sm text-body">{site.addressPlaceholder}</p>
+                    <address className="mt-1 text-sm not-italic leading-relaxed text-body">
+                      {site.address.lines.map((line) => (
+                        <span key={line} className="block">
+                          {line}
+                        </span>
+                      ))}
+                    </address>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">

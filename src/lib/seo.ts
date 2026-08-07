@@ -45,9 +45,11 @@ export function localBusinessJsonLd() {
     foundingDate: String(site.foundingYear),
     address: {
       "@type": "PostalAddress",
-      addressLocality: site.location,
-      addressRegion: "Western Cape",
-      addressCountry: "ZA",
+      streetAddress: site.address.street,
+      addressLocality: site.address.locality,
+      addressRegion: site.address.region,
+      postalCode: site.address.postalCode,
+      addressCountry: site.address.country,
     },
     areaServed: site.areaServed.map((area) => ({
       "@type": "City",
