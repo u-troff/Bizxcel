@@ -10,6 +10,7 @@ import {
   CloseIcon,
   FacebookIcon,
   GoogleIcon,
+  InstagramIcon,
   LinkedInIcon,
   MenuIcon,
 } from "@/components/icons";
@@ -17,6 +18,7 @@ import {
 const socialIconMap = {
   linkedin: LinkedInIcon,
   facebook: FacebookIcon,
+  instagram: InstagramIcon,
   google: GoogleIcon,
 };
 
@@ -50,7 +52,9 @@ export function Header() {
                 <a
                   key={social.label}
                   href={social.href}
-                  aria-label={social.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${social.label} (opens in a new tab)`}
                   className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-border text-ink transition-colors hover:border-gold hover:text-gold"
                 >
                   <Icon />

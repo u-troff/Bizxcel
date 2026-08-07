@@ -5,10 +5,14 @@ export const site = {
   name: "BizXcel",
   location: "Kuils River",
   fullName: "BizXcel Kuils River",
-  // Placeholder — bizxcelkr.com belongs to a third party and must never be used.
-  // Final domain is TBD; this is only a placeholder that matches the placeholder
-  // contact email domain below.
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://bizxcel.co.za",
+  // No custom domain yet. Falls back to the live Vercel deployment URL (set
+  // automatically on every deploy, no config needed) so metadata/sitemap/robots
+  // always point somewhere real, then to localhost for local dev. Once a real
+  // domain is bought and attached in Vercel, set NEXT_PUBLIC_SITE_URL to it
+  // (as an env var, in the Vercel project settings) and this takes over.
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"),
   phone: "021 903 1612",
   phoneHref: "tel:+27219031612",
   email: "info@bizxcel.co.za",
@@ -37,9 +41,15 @@ export const navLinks = [
 ] as const;
 
 export const socialLinks = [
-  { label: "LinkedIn", icon: "linkedin", href: "#" },
-  { label: "Facebook", icon: "facebook", href: "#" },
-  { label: "Google", icon: "google", href: "#" },
+  {
+    label: "Facebook",
+    icon: "facebook",
+    href: "https://www.facebook.com/profile.php?id=61563080360102",
+  },
+  { label: "Instagram", icon: "instagram", href: "https://www.instagram.com/bizxcelkr/" },
+  { label: "Google", icon: "google", href: "https://share.google/gCxxUVdABxD0gEz5b" },
+  // No LinkedIn profile supplied yet — add the URL here and it appears in the header
+  // and footer automatically.
 ] as const;
 
 export const trustBadges = [
@@ -50,13 +60,15 @@ export const trustBadges = [
 ] as const;
 
 export const serviceBadges = [
-  "Bookkeeping",
-  "Payroll",
-  "Financial Statements",
+  "Monthly Bookkeeping",
+  "Payroll Administration",
+  "Management & Financial Reporting",
   "SARS Tax Compliance",
   "Company Registrations",
   "BBBEE Letters",
-  "Business Advisory",
+  "WCA/COIDA",
+  "UIF",
+  "Personal Tax Returns",
 ] as const;
 
 export type ServiceGroup = {
@@ -65,48 +77,40 @@ export type ServiceGroup = {
   image: string;
 };
 
+// These three groups and their items mirror the practice's services flyer exactly.
+// Keep them in step with it — the flyer is the source of truth for what we offer.
 export const serviceGroups: ServiceGroup[] = [
   {
-    title: "Accounting & Payroll",
+    title: "Accounting",
     items: [
-      "Monthly Bookkeeping",
-      "Payroll Administration",
-      "Management & Financial Reporting",
-      "Annual Financial Statements",
+      "Monthly bookkeeping",
+      "Payroll administration",
+      "Management and financial reporting",
+      "BBBEE letters",
+      "SARS tax compliance and submissions",
+      "SARS deferred payment arrangements and compensation",
     ],
     image: "/images/services/accounting-payroll.jpg",
   },
   {
-    title: "Tax & SARS Compliance",
+    title: "Business",
     items: [
-      "SARS Tax Compliance",
-      "Income Tax Consulting & Submissions",
-      "Deferred Payment & Compromise Arrangements",
-      "SARS Queries & Audits",
-      "Personal Tax Returns",
-    ],
-    image: "/images/services/tax-sars-compliance.jpg",
-  },
-  {
-    title: "Registrations & Statutory",
-    items: [
-      "Company Registration & Amendments",
-      "SARS Registrations (Companies, Individuals & Trusts)",
-      "UIF",
-      "Workmen's Compensation (WCA/COIDA)",
-      "BBBEE Letters",
+      "Company registration and amendments",
+      "SARS registrations — companies, individuals and trusts",
+      "Workman's compensation commission (WCA/COIDA)",
+      "Unemployment Insurance Fund (UIF)",
     ],
     image: "/images/services/registrations-statutory.jpg",
   },
   {
-    title: "Advisory & Growth",
+    title: "Individual",
     items: [
-      "Business Plans & Valuations",
-      "Tender Process Assistance",
-      "Financial Planning Guidance",
-      "Legal Assistance",
+      "Personal tax registration and returns",
+      "Tax compliance and advisory",
+      "Financial planning guidance",
+      "Assistance with SARS queries and audits",
     ],
-    image: "/images/services/advisory-growth.jpg",
+    image: "/images/services/tax-sars-compliance.jpg",
   },
 ];
 

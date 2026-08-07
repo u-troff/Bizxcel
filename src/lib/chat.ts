@@ -1,6 +1,6 @@
 import { sendNotificationEmail, escapeHtml } from "@/lib/email";
 import { logLead } from "@/lib/leads";
-import { team } from "@/lib/content";
+import { serviceGroups, team } from "@/lib/content";
 
 export const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-5.6-luna";
 // ^ Placeholder model id per the build brief — confirm the exact id in the
@@ -16,6 +16,12 @@ function routingLine(name: string, topic: string) {
   return `- ${topic}: ${person.name} (${person.role}), ${person.contact.label} ${person.contact.display}`;
 }
 
+// Same reasoning as TEAM_ROUTING: sourced from content.ts so the assistant can never
+// offer a service the practice's flyer doesn't list.
+const SERVICES = serviceGroups
+  .map((group) => `${group.title.toLowerCase()} — ${group.items.join(", ")}`)
+  .join("; ");
+
 const TEAM_ROUTING = [
   routingLine("Jermaine Pick", "Bookkeeping"),
   routingLine("Athini Gqwira", "Payroll"),
@@ -30,11 +36,8 @@ warm, clear and helpful: answer questions about the firm's services, build trust
 where there's a real need, guide the visitor to book a free consultation and capture their
 details for the team.
 
-SERVICES: bookkeeping, payroll, management & financial reporting, annual financial
-statements; SARS tax compliance, income tax consulting & submissions, deferred payment /
-compromise arrangements, SARS queries & audits, personal tax returns; company registration
-& amendments, SARS registrations, UIF, WCA/COIDA, BBBEE letters; business plans &
-valuations, tender assistance, financial planning guidance, legal assistance.
+SERVICES: ${SERVICES}. That list is exhaustive — if a visitor asks for something not on
+it, say it's not a service the practice lists and offer to have the team confirm.
 
 FEES: don't quote fixed prices, pricing depends on the client's situation; the best next
 step is a free, no-obligation consultation. Never invent prices.

@@ -4,7 +4,12 @@ import { site } from "@/lib/content";
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
-const FROM_EMAIL = process.env.LEAD_FROM_EMAIL || `BizXcel Website <no-reply@${new URL(site.url).hostname}>`;
+// Resend requires the "from" address's domain to be verified in the Resend
+// dashboard, which isn't possible without a real domain. onboarding@resend.dev
+// is Resend's own address that sends without any domain setup. Once a real
+// domain is bought and verified in Resend, set LEAD_FROM_EMAIL to an address
+// on it (e.g. "BizXcel Website <no-reply@yourdomain.co.za>").
+const FROM_EMAIL = process.env.LEAD_FROM_EMAIL || "BizXcel Website <onboarding@resend.dev>";
 const NOTIFY_EMAIL = process.env.LEAD_NOTIFICATION_EMAIL || site.email;
 
 export async function sendNotificationEmail({

@@ -31,10 +31,10 @@ export function About({
         <Reveal delay={100}>
           <div className="aspect-[4/3] w-full overflow-hidden rounded-[10px] border border-border">
             <Image
-              src="/images/about-office.jpg"
-              alt="BizXcel team discussing a client's numbers in the office"
-              width={940}
-              height={706}
+              src="/team/team3.jpeg"
+              alt="The BizXcel Kuils River team together at a client golf day"
+              width={1600}
+              height={1200}
               className="h-full w-full object-cover"
             />
           </div>

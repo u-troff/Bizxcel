@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { site } from "@/lib/content";
+import { site, socialLinks } from "@/lib/content";
 
 export function buildPageMetadata({
   title,
@@ -63,5 +63,7 @@ export function localBusinessJsonLd() {
       "@type": "Organization",
       name: "South African Institute of Professional Accountants (SAIPA)",
     },
+    // Links the site to the practice's verified social and Google Business profiles.
+    sameAs: socialLinks.map((social) => social.href),
   };
 }

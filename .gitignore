@@ -40,3 +40,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/invoices
+
+# Source frames for the scroll hero (334MB of ezgif PNGs).
+# scripts/optimize-frames.mjs derives the committed WebP sets in public/scroll-hero/.
+/public/frames
+/content
+/domains

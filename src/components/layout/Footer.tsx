@@ -2,11 +2,21 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { navLinks, site, socialLinks } from "@/lib/content";
-import { FacebookIcon, GoogleIcon, LinkedInIcon, MailIcon, PhoneIcon, ClockIcon, MapPinIcon } from "@/components/icons";
+import {
+  FacebookIcon,
+  GoogleIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  MailIcon,
+  PhoneIcon,
+  ClockIcon,
+  MapPinIcon,
+} from "@/components/icons";
 
 const socialIconMap = {
   linkedin: LinkedInIcon,
   facebook: FacebookIcon,
+  instagram: InstagramIcon,
   google: GoogleIcon,
 };
 
@@ -29,7 +39,9 @@ export function Footer() {
                 <a
                   key={social.label}
                   href={social.href}
-                  aria-label={social.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${social.label} (opens in a new tab)`}
                   className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-white/25 text-white transition-colors hover:border-gold hover:text-gold"
                 >
                   <Icon />

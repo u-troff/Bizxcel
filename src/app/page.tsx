@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/sections/Hero";
+import { LeadershipCard } from "@/components/sections/LeadershipCard";
+import { ScrollVideoHero } from "@/components/sections/ScrollVideoHero";
 import { TrustBar, ServiceBar } from "@/components/sections/TrustBar";
 import { Services } from "@/components/sections/Services";
 import { About } from "@/components/sections/About";
@@ -24,7 +26,7 @@ export const metadata: Metadata = buildPageMetadata({
 export default function Home() {
   return (
     <>
-      <Hero />
+      <ScrollVideoHero staticHero={<Hero />} leadershipCard={<LeadershipCard />} />
       <TrustBar />
       <Services />
       <ServiceBar />

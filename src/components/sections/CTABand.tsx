@@ -10,10 +10,10 @@ export function CTABand() {
         <Reveal>
           <div className="aspect-[4/3] w-full overflow-hidden rounded-[10px] border border-border">
             <Image
-              src="/images/cta-client-meeting.jpg"
-              alt="Advisor talking through a client's tax situation"
-              width={940}
-              height={706}
+              src="/team/team1.jpeg"
+              alt="BizXcel team members at a SAIPA professional accountants event"
+              width={1600}
+              height={1067}
               className="h-full w-full object-cover"
             />
           </div>

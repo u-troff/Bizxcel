@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
@@ -56,6 +57,43 @@ export function Team({
             Placeholder photos shown until headshots are added.
           </p>
         )}
+
+        {/* The two portrait-format team photos, kept in boxes that match their crop. */}
+        <div className="mt-16 grid gap-6 sm:grid-cols-2">
+          {[
+            {
+              src: "/team/team2.jpeg",
+              width: 3024,
+              height: 4032,
+              alt: "BizXcel team members at a SAIPA professional development session",
+              caption: "Continuing professional development with SAIPA",
+            },
+            {
+              src: "/team/team4.jpeg",
+              width: 900,
+              height: 1600,
+              alt: "A BizXcel team member leading an in-house training session",
+              caption: "In-house training, so your file is never stuck with one person",
+            },
+          ].map((photo, index) => (
+            <Reveal key={photo.src} delay={index * 80}>
+              <figure>
+                <div className="aspect-[3/4] w-full overflow-hidden rounded-[10px] border border-border">
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    width={photo.width}
+                    height={photo.height}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <figcaption className="mt-3 text-sm leading-relaxed text-muted">
+                  {photo.caption}
+                </figcaption>
+              </figure>
+            </Reveal>
+          ))}
+        </div>
       </Container>
     </section>
   );
