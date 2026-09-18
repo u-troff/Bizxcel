@@ -31,7 +31,7 @@ export const site = {
     postalCode: "7580",
     country: "ZA",
   },
-  whatsappHref: "https://wa.me/27219031612",
+  whatsappHref: "https://wa.me/27600160834",
   foundingYear: 2014,
   areaServed: [
     "Kuils River",
