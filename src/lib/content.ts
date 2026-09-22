@@ -16,7 +16,7 @@ export const site = {
   phone: "021 903 1612",
   phoneHref: "tel:+27219031612",
   email: "info@bizxcel.co.za",
-  hours: "Monday–Friday, 08:00–17:00",
+  hours: "Monday–Thursday, 08:00–16:30 , Friday, 07:30–15:00",
   address: {
     // `lines` is the display form; the individual fields feed the LocalBusiness
     // structured data, which needs street and postal code separated out.
@@ -45,6 +45,7 @@ export const site = {
 } as const;
 
 export const navLinks = [
+  { label: "Home", href: "/" },
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
   { label: "Team", href: "/team" },
