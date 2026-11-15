@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Insights } from "@/components/sections/Insights";
 import { CTABand } from "@/components/sections/CTABand";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Insights & Guidance for Cape Town Businesses",
@@ -13,6 +13,12 @@ export const metadata: Metadata = buildPageMetadata({
 export default function InsightsPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd([{ name: "Insights", path: "/insights" }])),
+        }}
+      />
       <Insights titleAs="h1" background="white" />
       <CTABand />
     </>

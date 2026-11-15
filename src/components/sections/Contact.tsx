@@ -1,6 +1,7 @@
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { ClockIcon, MailIcon, MapPinIcon, PhoneIcon } from "@/components/icons";
 import { site } from "@/lib/content";
@@ -12,9 +13,10 @@ export function Contact({
   titleAs?: "h1" | "h2";
   background?: "white" | "cream";
 }) {
-  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    site.address.lines.join(", ")
-  )}`;
+  const fullAddress = site.address.lines.join(", ");
+  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
+  // No Google Maps API key required: this is the plain embeddable search iframe.
+  const mapEmbedSrc = `https://www.google.com/maps?q=${encodeURIComponent(fullAddress)}&output=embed`;
 
   return (
     <section id="contact" className={background === "cream" ? "bg-cream" : "bg-white"}>
@@ -46,21 +48,28 @@ export function Contact({
                   <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                   <div>
                     <p className="text-sm font-semibold text-ink">Phone</p>
-                    <a href={site.phoneHref} className="mt-1 block text-sm text-body hover:text-gold">
+                    <TrackedLink
+                      channel="call"
+                      location="contact_section"
+                      href={site.phoneHref}
+                      className="mt-1 block text-sm text-body hover:text-gold"
+                    >
                       {site.phone}
-                    </a>
+                    </TrackedLink>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <MailIcon className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                   <div>
                     <p className="text-sm font-semibold text-ink">Email</p>
-                    <a
+                    <TrackedLink
+                      channel="email"
+                      location="contact_section"
                       href={`mailto:${site.email}`}
                       className="mt-1 block text-sm text-body hover:text-gold"
                     >
                       {site.email}
-                    </a>
+                    </TrackedLink>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
@@ -72,7 +81,15 @@ export function Contact({
                 </li>
               </ul>
 
-              <div className="mt-6 aspect-[16/9] w-full rounded-[8px] border border-border bg-[linear-gradient(135deg,var(--cream)_0%,#e4e9ee_100%)]" />
+              <div className="mt-6 aspect-[16/9] w-full overflow-hidden rounded-[8px] border border-border">
+                <iframe
+                  src={mapEmbedSrc}
+                  title={`Map showing ${site.fullName}'s office at ${fullAddress}`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="h-full w-full border-0"
+                />
+              </div>
               <a
                 href={mapsHref}
                 target="_blank"

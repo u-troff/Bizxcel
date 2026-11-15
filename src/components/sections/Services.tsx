@@ -34,7 +34,7 @@ export function Services({
                     <div className="aspect-[4/3] w-full overflow-hidden rounded-[10px] border border-border">
                       <Image
                         src={group.image}
-                        alt={group.title}
+                        alt={group.imageAlt}
                         width={940}
                         height={706}
                         className="h-full w-full object-cover"

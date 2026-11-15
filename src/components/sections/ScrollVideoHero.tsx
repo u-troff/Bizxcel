@@ -110,6 +110,9 @@ export function ScrollVideoHero({
     for (let index = 0; index < config.count; index += 1) {
       const image = new window.Image();
       image.decoding = "async";
+      // Lower than default priority so these ~24-60 background fetches don't compete
+      // with the LCP-critical poster image, fonts and CSS for bandwidth on first load.
+      image.fetchPriority = "low";
       image.src = framePath(config.dir, index);
       // A dropped frame must not stall the loader — nearestLoaded() covers the gap.
       image.onload = () => settle(index, true);

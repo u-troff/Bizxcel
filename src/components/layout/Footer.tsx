@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { navLinks, site, socialLinks } from "@/lib/content";
 import {
   FacebookIcon,
@@ -83,15 +84,20 @@ export function Footer() {
             </li>
             <li className="flex items-center gap-2.5">
               <PhoneIcon className="h-4 w-4 shrink-0 text-gold" />
-              <a href={site.phoneHref} className="hover:text-white">
+              <TrackedLink channel="call" location="footer" href={site.phoneHref} className="hover:text-white">
                 {site.phone}
-              </a>
+              </TrackedLink>
             </li>
             <li className="flex items-center gap-2.5">
               <MailIcon className="h-4 w-4 shrink-0 text-gold" />
-              <a href={`mailto:${site.email}`} className="hover:text-white">
+              <TrackedLink
+                channel="email"
+                location="footer"
+                href={`mailto:${site.email}`}
+                className="hover:text-white"
+              >
                 {site.email}
-              </a>
+              </TrackedLink>
             </li>
             <li className="flex items-center gap-2.5">
               <ClockIcon className="h-4 w-4 shrink-0 text-gold" />

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Lora } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -7,6 +8,9 @@ import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { ChatWidget } from "@/components/chat/ChatWidget";
 import { site } from "@/lib/content";
 import { localBusinessJsonLd } from "@/lib/seo";
+
+const gaId = process.env.NEXT_PUBLIC_GA_ID;
+const shouldLoadGA = Boolean(gaId) && process.env.NODE_ENV === "production";
 
 const lora = Lora({
   variable: "--font-lora",
@@ -63,6 +67,7 @@ export default function RootLayout({
         <WhatsAppButton />
         <ChatWidget />
       </body>
+      {shouldLoadGA && <GoogleAnalytics gaId={gaId as string} />}
     </html>
   );
 }

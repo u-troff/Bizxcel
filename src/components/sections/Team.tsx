@@ -4,6 +4,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { PersonAvatar } from "@/components/ui/PersonAvatar";
 import { Reveal } from "@/components/ui/Reveal";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { PhoneIcon, WhatsAppIcon } from "@/components/icons";
 import { team } from "@/lib/content";
 import { getPersonPhoto } from "@/lib/team-photos";
@@ -35,7 +36,9 @@ export function Team({
                   <p className="mt-1 text-sm font-semibold text-gold">{member.role}</p>
                   <p className="mt-2 text-[0.95rem] leading-relaxed text-body">{member.blurb}</p>
                 </div>
-                <a
+                <TrackedLink
+                  channel={member.contact.label === "WhatsApp" ? "whatsapp" : "call"}
+                  location="team_card"
                   href={member.contact.href}
                   target={member.contact.label === "WhatsApp" ? "_blank" : undefined}
                   rel={member.contact.label === "WhatsApp" ? "noopener noreferrer" : undefined}
@@ -47,7 +50,7 @@ export function Team({
                     <PhoneIcon className="h-4 w-4" />
                   )}
                   {member.contact.label}: {member.contact.display}
-                </a>
+                </TrackedLink>
               </Card>
             </Reveal>
           ))}

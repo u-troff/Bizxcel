@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { serviceDropdownOptions } from "@/lib/content";
+import { trackContactFormSubmit } from "@/lib/analytics";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -34,6 +35,7 @@ export function ContactForm() {
       }
 
       setStatus("success");
+      trackContactFormSubmit({ service: String(data.service ?? "") });
       form.reset();
     } catch (error) {
       setStatus("error");

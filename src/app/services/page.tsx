@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Services } from "@/components/sections/Services";
 import { HowWeWork } from "@/components/sections/HowWeWork";
 import { CTABand } from "@/components/sections/CTABand";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Accounting, Tax & SARS Compliance Services",
@@ -14,6 +14,12 @@ export const metadata: Metadata = buildPageMetadata({
 export default function ServicesPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd([{ name: "Services", path: "/services" }])),
+        }}
+      />
       <Services titleAs="h1" background="cream" />
       <HowWeWork background="white" />
       <CTABand />

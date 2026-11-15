@@ -3,7 +3,7 @@ import { About } from "@/components/sections/About";
 import { WhyBizxcel } from "@/components/sections/WhyBizxcel";
 import { Leadership } from "@/components/sections/Leadership";
 import { CTABand } from "@/components/sections/CTABand";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "About BizXcel Kuils River",
@@ -15,6 +15,12 @@ export const metadata: Metadata = buildPageMetadata({
 export default function AboutPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd([{ name: "About", path: "/about" }])),
+        }}
+      />
       <About titleAs="h1" background="white" />
       <WhyBizxcel background="cream" />
       <Leadership background="white" />

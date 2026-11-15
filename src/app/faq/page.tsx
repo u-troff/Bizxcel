@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { FAQ } from "@/components/sections/FAQ";
 import { CTABand } from "@/components/sections/CTABand";
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, breadcrumbJsonLd, faqPageJsonLd } from "@/lib/seo";
+import { faqs } from "@/lib/content";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Frequently Asked Questions",
@@ -13,6 +14,16 @@ export const metadata: Metadata = buildPageMetadata({
 export default function FAQPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageJsonLd(faqs)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd([{ name: "FAQ", path: "/faq" }])),
+        }}
+      />
       <FAQ titleAs="h1" background="cream" />
       <CTABand />
     </>
