@@ -203,3 +203,33 @@ export const privacyNote = {
     "BizXcel Kuils River collects these details to contact you about your enquiry. We don't share them or sell them.",
   linkLabel: "Privacy notice",
 };
+
+/** Small interface strings used around the page. */
+export const ui = {
+  videoComingSoon: "Video coming soon",
+  soundOn: "Sound on",
+  soundOff: "Tap for sound",
+  videoHintMuted: "tap anywhere for sound",
+  videoHintSound: "sound on",
+  callLabel: "Call us",
+  testimonialsLabel: "Client video testimonials",
+  playTestimonial: "Play video",
+  railBack: "Previous videos",
+  railNext: "More videos",
+  formFallback:
+    "The form is taking a moment to load. You can message us on WhatsApp instead.",
+  formFallbackButton: "Message us on WhatsApp",
+  formTitle: "SARS check form",
+  footerLine: "SAIPA member firm. Registered SARS Tax Practitioner.",
+  sourceLabel: "Source",
+  skipToForm: "Skip to the form",
+};
+
+/** Starting values and the look-ahead for the penalty calculator. */
+export const calculatorDefaults = {
+  /** Index into penaltyScale.bands: R250,001 to R500,000. */
+  bandIndex: 1,
+  returns: 1,
+  months: 12,
+  extraMonths: 3,
+};
