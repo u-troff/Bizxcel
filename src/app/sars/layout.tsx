@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 
 import { hero } from "@/lib/sars-content";
+import { stripMarkup } from "./_components/RichText";
 import { SARS_PIXEL_ID } from "./sars-pixel";
 
 export const metadata: Metadata = {
   title: "Behind with SARS? | BizXcel Kuils River",
-  description: hero.sub,
+  description: stripMarkup(hero.sub),
   // Paid-traffic landing page: reachable by direct URL only, kept out of search
   // results and out of the sitemap.
   robots: {

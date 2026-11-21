@@ -1,62 +1,19 @@
 /**
- * All copy for /sars and /sars/next-step.
+ * All copy for /sars, /sars/apply and /sars/next-step.
  * Rules: see CLAUDE.md. No dashes, no invented numbers, no promises about SARS outcomes.
  * Every figure below has its source next to it.
+ *
+ * The option lists in applyQuestions are also the server's allow-list
+ * (src/lib/sars-apply.ts). Change an option here and the server follows.
  */
 
-import { site } from "@/lib/content";
-
+/** {{gold}} and __underlined__ markers are rendered by RichText; stripMarkup() removes them. */
 export const hero = {
   eyebrow: "For business owners and taxpayers in Cape Town",
-  headline: "Behind with SARS? Here's how to get back up to date.",
-  sub: "A short video from a registered SARS Tax Practitioner. Then tell us where you stand, and we'll WhatsApp you.",
+  headline: "{{Behind with SARS}}, or not sure where you stand? Watch this first.",
+  sub: "SARS can charge a __penalty for every month__ a __return is late__. In about 3 minutes, see how a registered SARS Tax Practitioner gets you back up to date.",
   cta: "Check where I stand",
-  ctaNote: "About a minute. Free, no obligation.",
-};
-
-/** Shown as a row of badges under the video. All from site content and the team page. */
-export const credentials = [
-  { label: "SAIPA member firm" },
-  { label: "Registered SARS Tax Practitioner" },
-  { label: `Since ${site.foundingYear}` },
-  { label: "Team of 9 in Kuils River" },
-];
-
-export interface SarsFact {
-  stat: string;
-  detail: string;
-  source: string;
-  sourceUrl: string;
-}
-
-/** "The cost of waiting". Only figures SARS itself publishes. */
-export const costOfWaiting = {
-  eyebrow: "The cost of waiting",
-  title: "The penalty runs every month until the return is in.",
-  facts: [
-    {
-      stat: "R250 to R16,000",
-      detail: "a month, depending on your taxable income",
-      source: "SARS, administrative penalties page, updated 2 April 2026",
-      sourceUrl:
-        "https://www.sars.gov.za/individuals/what-if-i-do-not-agree/request-for-remission-of-administrative-non-compliance-penalty/",
-    },
-    {
-      stat: "Up to 35 months",
-      detail: "the penalty can keep coming back every month",
-      source: "SARS, administrative penalties page, updated 2 April 2026",
-      sourceUrl:
-        "https://www.sars.gov.za/individuals/what-if-i-do-not-agree/request-for-remission-of-administrative-non-compliance-penalty/",
-    },
-    {
-      stat: "It stops",
-      detail: "when the outstanding return is submitted. SARS advises filing it to stop further penalties.",
-      source: "SARS, administrative penalties page, updated 2 April 2026",
-      sourceUrl:
-        "https://www.sars.gov.za/individuals/what-if-i-do-not-agree/request-for-remission-of-administrative-non-compliance-penalty/",
-    },
-  ] satisfies SarsFact[],
-  note: "This is the penalty for a late return only. Tax owed and interest are separate.",
+  ctaNote: "Takes about a minute. Then we WhatsApp you. Free, no obligation.",
 };
 
 export interface Testimonial {
@@ -76,18 +33,163 @@ export const testimonials: Testimonial[] = [
   { videoId: "TODO_TESTIMONIAL_3", label: "Side business, Northern suburbs", duration: "0:20", portrait: true },
 ];
 
-/** [WAYNE] Confirm these five steps match how the team works. */
-export const howItWorks = {
-  eyebrow: "How it works",
-  title: "Five steps. You don't phone SARS once.",
-  steps: [
-    { n: "01", name: "A free chat", body: "We find out where you are. No cost, no obligation." },
-    { n: "02", name: "We check your SARS profile", body: "With your permission, we see exactly what's outstanding." },
-    { n: "03", name: "We file what's outstanding", body: "We tell you which documents we need, and help you find them." },
-    { n: "04", name: "We deal with SARS for you", body: "Queries, letters and payment arrangements if you can't pay it all at once." },
-    { n: "05", name: "We keep you up to date", body: "We track the dates, so this doesn't happen again." },
-  ],
+export const testimonialsSection = {
+  title: "What our clients say",
 };
+
+/* ------------------------------------------------------------------ */
+/* /sars/apply: one question per screen                                */
+/* ------------------------------------------------------------------ */
+
+export type ChoiceKey = "need" | "timing" | "area";
+export type ContactKey = "first_name" | "whatsapp" | "email";
+
+export interface ChoiceStep {
+  kind: "choice";
+  key: ChoiceKey;
+  question: string;
+  options: readonly string[];
+}
+
+export interface ContactField {
+  key: ContactKey;
+  label: string;
+  input: "text" | "tel" | "email";
+  placeholder: string;
+  autoComplete: string;
+  required: boolean;
+  /** Shown when the field is missing or not valid. */
+  error: string;
+}
+
+export interface ContactStep {
+  kind: "contact";
+  question: string;
+  sub: string;
+  fields: ContactField[];
+  consent: string;
+  consentError: string;
+  button: string;
+}
+
+export type ApplyStep = ChoiceStep | ContactStep;
+
+export const needOptions = [
+  "Behind on returns or penalties",
+  "A SARS letter or audit",
+  "Monthly bookkeeping or payroll",
+  "Company or CIPC registration",
+  "Not sure, I want a check-up",
+] as const;
+
+/** The last option marks the visitor as not ready yet (see isQualified). */
+export const timingOptions = ["This week", "This month", "Just looking"] as const;
+
+export const areaOptions = [
+  "Cape Town northern suburbs",
+  "Rest of Cape Town",
+  "Rest of the Western Cape",
+  "Elsewhere in South Africa",
+] as const;
+
+export const applyQuestions: ApplyStep[] = [
+  {
+    kind: "choice",
+    key: "need",
+    question: "What do you need help with most?",
+    options: needOptions,
+  },
+  {
+    kind: "choice",
+    key: "timing",
+    question: "How soon do you want it sorted?",
+    options: timingOptions,
+  },
+  {
+    kind: "choice",
+    key: "area",
+    question: "Where are you based?",
+    options: areaOptions,
+  },
+  {
+    kind: "contact",
+    question: "Where should we WhatsApp you?",
+    sub: "Someone from our team will message you to set up your free consultation.",
+    fields: [
+      {
+        key: "first_name",
+        label: "First name",
+        input: "text",
+        placeholder: "Your first name",
+        autoComplete: "given-name",
+        required: true,
+        error: "Please add your first name.",
+      },
+      {
+        key: "whatsapp",
+        label: "WhatsApp number",
+        input: "tel",
+        placeholder: "082 123 4567",
+        autoComplete: "tel",
+        required: true,
+        error: "Please add a South African mobile number, for example 082 123 4567.",
+      },
+      {
+        key: "email",
+        label: "Email (optional)",
+        input: "email",
+        placeholder: "you@example.co.za",
+        autoComplete: "email",
+        required: false,
+        error: "That email address doesn't look right.",
+      },
+    ],
+    consent: "I agree that BizXcel Kuils River may contact me on WhatsApp about my enquiry.",
+    consentError: "Please tick the box so we can WhatsApp you.",
+    button: "Send",
+  },
+];
+
+export const applyUi = {
+  back: "Back",
+  /** "{n}" and "{total}" are replaced. */
+  progress: "{n} of {total}",
+  pageTitle: "Check where you stand | BizXcel Kuils River",
+};
+
+/* ------------------------------------------------------------------ */
+/* /sars/next-step                                                     */
+/* ------------------------------------------------------------------ */
+
+export const nextStep = {
+  eyebrow: "All done",
+  headline: "Thanks. We've got your details.",
+  /** "{name}" is replaced with the first name from the form. */
+  headlineNamed: "Thanks, {name}. We've got your details.",
+  /** [WAYNE] Only promise a time the team can keep every time, December included. */
+  sub: "Someone from our team will WhatsApp you within one business day. Want to start now? Message us below.",
+  whatsappButton: "Message us on WhatsApp",
+  /** "{name}" is replaced. Goes into the wa.me link text, never the page URL. */
+  whatsappMessage: "Hi BizXcel, I just filled in the SARS form on your website. My name is {name}.",
+  whatsappMessageNoName: "Hi BizXcel, I just filled in the SARS form on your website.",
+  prepTitle: "Have these handy for your consultation",
+  prep: [
+    "Any SARS letters or emails you've had",
+    "Your SARS eFiling login, if you have one",
+    "Which tax years you think are outstanding",
+  ],
+  reassurance: "No judgement. Most people who come to us are a little behind.",
+};
+
+export const privacyNote = {
+  formLine:
+    "BizXcel Kuils River collects these details to contact you about your enquiry. We don't share them or sell them.",
+  linkLabel: "Privacy notice",
+};
+
+/* ------------------------------------------------------------------ */
+/* Penalty calculator: not on the page right now, kept for later.      */
+/* ------------------------------------------------------------------ */
 
 export interface PenaltyBand {
   label: string;
@@ -98,7 +200,6 @@ export interface PenaltyBand {
  * Fixed penalty scale for a late return, by taxable income.
  * Source: Sage South Africa summary of the SARS scale, 2026.
  * SARS's own page confirms only the R250 to R16,000 range and the 35-month limit.
- * The calculator stays hidden until confirmedBy is set.
  * [WAYNE] Confirm the bands AND that each outstanding return carries its own penalty.
  */
 export const penaltyScale = {
@@ -130,101 +231,6 @@ export const calculator = {
   ctaButton: "Check where I stand",
 };
 
-export const formSection = {
-  eyebrow: "Step 1 of 2",
-  title: "Tell us where you stand.",
-  sub: "A few quick questions. About a minute. Then we WhatsApp you.",
-};
-
-export interface Faq {
-  q: string;
-  a: string;
-}
-
-/** [WAYNE] Read every answer before launch. */
-export const faqs: Faq[] = [
-  {
-    q: "Is it too late if I'm years behind?",
-    a: "No. SARS penalties run monthly, so the sooner the returns are filed, the sooner they stop growing.",
-  },
-  {
-    q: "Can the penalties be cancelled?",
-    a: "In some cases SARS will consider a request to remit a penalty. We'll tell you honestly if yours qualifies. We can't promise it.",
-  },
-  {
-    q: "I can't pay what I owe. Now what?",
-    a: "SARS asks people who can't pay in full to make contact and arrange payment. We handle deferred payment and compromise applications for you.",
-  },
-  {
-    q: "What does it cost?",
-    a: "The first conversation is free. Once we know what's outstanding, we tell you the cost before any work starts.",
-  },
-  {
-    q: "My paperwork is a mess. Can you still help?",
-    a: "Yes. Hardly anyone arrives with a neat file. We tell you exactly what we need and help you find it.",
-  },
-  {
-    q: "Do I need to come to your office?",
-    a: "No. Most of it can be done on WhatsApp and email. You're welcome to visit us in Kuils River if you prefer.",
-  },
-  {
-    q: "What happens after I fill in the form?",
-    a: "Someone from our team WhatsApps you to arrange your free consultation. You can also message us straight away from the next page.",
-  },
-];
-
-export const finalCta = {
-  title: "The sooner we look, the more options you have.",
-  cta: hero.cta,
-};
-
-export const nextStep = {
-  eyebrow: "Step 2 of 2",
-  headline: "Thanks. We've got your details.",
-  /** "{name}" is replaced with the first name from the form. */
-  headlineNamed: "Thanks, {name}. We've got your details.",
-  /** [WAYNE] Only promise a time the team can keep every time, December included. */
-  sub: "Someone from our team will WhatsApp you within one business day. Want to start now? Message us below.",
-  whatsappButton: "Message us on WhatsApp",
-  /** "{name}" is replaced. Goes into the wa.me link text, never the page URL. */
-  whatsappMessage: "Hi BizXcel, I just filled in the SARS form on your website. My name is {name}.",
-  whatsappMessageNoName: "Hi BizXcel, I just filled in the SARS form on your website.",
-  prepTitle: "Have these handy for your consultation",
-  prep: [
-    "Any SARS letters or emails you've had",
-    "Your SARS eFiling login, if you have one",
-    "Which tax years you think are outstanding",
-  ],
-  reassurance: "No judgement. Most people who come to us are a little behind.",
-};
-
-export const privacyNote = {
-  formLine:
-    "BizXcel Kuils River collects these details to contact you about your enquiry. We don't share them or sell them.",
-  linkLabel: "Privacy notice",
-};
-
-/** Small interface strings used around the page. */
-export const ui = {
-  videoComingSoon: "Video coming soon",
-  soundOn: "Sound on",
-  soundOff: "Tap for sound",
-  videoHintMuted: "tap anywhere for sound",
-  videoHintSound: "sound on",
-  callLabel: "Call us",
-  testimonialsLabel: "Client video testimonials",
-  playTestimonial: "Play video",
-  railBack: "Previous videos",
-  railNext: "More videos",
-  formFallback:
-    "The form is taking a moment to load. You can message us on WhatsApp instead.",
-  formFallbackButton: "Message us on WhatsApp",
-  formTitle: "SARS check form",
-  footerLine: "SAIPA member firm. Registered SARS Tax Practitioner.",
-  sourceLabel: "Source",
-  skipToForm: "Skip to the form",
-};
-
 /** Starting values and the look-ahead for the penalty calculator. */
 export const calculatorDefaults = {
   /** Index into penaltyScale.bands: R250,001 to R500,000. */
@@ -232,4 +238,18 @@ export const calculatorDefaults = {
   returns: 1,
   months: 12,
   extraMonths: 3,
+};
+
+/** Small interface strings used around the pages. */
+export const ui = {
+  videoComingSoon: "Video coming soon",
+  soundOn: "Sound on",
+  soundOff: "Tap for sound",
+  videoHintMuted: "tap anywhere for sound",
+  videoHintSound: "sound on",
+  testimonialsLabel: "Client video testimonials",
+  playTestimonial: "Play video",
+  railBack: "Previous videos",
+  railNext: "More videos",
+  footerLine: "SAIPA member firm. Registered SARS Tax Practitioner.",
 };

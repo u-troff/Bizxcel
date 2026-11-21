@@ -21,7 +21,7 @@ export function trackStandard(
   );
 }
 
-/** Custom event (VSL_50, CalculatorUsed, FormViewed). */
+/** Custom event (VSL_50, Apply_Step, CalculatorUsed). */
 export function trackCustom(
   name: string,
   params: Record<string, unknown> = {},

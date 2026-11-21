@@ -1,13 +1,12 @@
 /**
- * Globals used by the /sars pages only: the Meta Pixel function, Tally's embed
- * loader and Wistia's <wistia-player> element.
+ * Globals used by the /sars pages only: the Meta Pixel function and Wistia's
+ * <wistia-player> element.
  */
 import type { WistiaElement } from "@/lib/wistia";
 
 declare global {
   interface Window {
     fbq?: (...args: unknown[]) => void;
-    Tally?: { loadEmbeds: () => void };
   }
 }
 

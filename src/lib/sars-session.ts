@@ -13,12 +13,29 @@ export interface StoredLead {
   phone?: string;
 }
 
+export interface UtmParams {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  fbclid?: string;
+}
+
+const UTM_KEYS: (keyof UtmParams)[] = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "fbclid",
+];
+
 let pageEventId: string | undefined;
 
 /**
- * One id per page load, shared by the Tally hidden field and the Lead event so
- * the browser and server copies of the event deduplicate. Kept in module memory
- * on purpose: a fresh load gets a fresh id.
+ * One id per page load, shared by the Lead event and the saved row so the
+ * browser and server copies of the event deduplicate. Kept in module memory
+ * on purpose: a fresh load gets a fresh id. /sars/apply keeps its own copy in
+ * sessionStorage so a reload carries on with the same id.
  */
 export function getPageEventId(): string {
   if (!pageEventId) {
@@ -28,6 +45,21 @@ export function getPageEventId(): string {
         : `lead_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
   }
   return pageEventId;
+}
+
+/** The ad tags in the current address bar. Only the five we track. */
+export function readUtm(): UtmParams {
+  const out: UtmParams = {};
+  try {
+    const params = new URLSearchParams(window.location.search);
+    for (const key of UTM_KEYS) {
+      const value = params.get(key)?.trim();
+      if (value) out[key] = value.slice(0, key === "fbclid" ? 500 : 200);
+    }
+  } catch {
+    // No window or a broken URL. No tags.
+  }
+  return out;
 }
 
 export function saveLead(lead: StoredLead): void {

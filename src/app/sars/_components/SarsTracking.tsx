@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-
 import { trackCustom, trackStandard } from "../track";
 import { trackWhatsAppClick } from "@/lib/analytics";
 import PenaltyCalculator from "./PenaltyCalculator";
@@ -17,27 +15,6 @@ import {
  *
  * The VSL milestones live in useWistiaMilestones, next to the video.
  */
-
-/** FormViewed: the form is half on screen for the first time. */
-export default function FormViewedTracker({ formId }: { formId: string }) {
-  useEffect(() => {
-    const form = document.getElementById(formId);
-    if (!form) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        trackCustom("FormViewed");
-        observer.disconnect();
-      },
-      { threshold: 0.5 },
-    );
-    observer.observe(form);
-    return () => observer.disconnect();
-  }, [formId]);
-
-  return null;
-}
 
 /** CalculatorUsed: the first time a visitor changes any calculator input. */
 export function TrackedCalculator() {

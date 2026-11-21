@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { Container } from "@/components/ui/Container";
-import { TrackedLink } from "@/components/ui/TrackedLink";
 import { site } from "@/lib/content";
 import { privacyNote, ui } from "@/lib/sars-content";
 
@@ -23,16 +22,6 @@ export default function SarsFooter({ stickyPad = false }: { stickyPad?: boolean 
               </span>
             ))}
           </address>
-          <p className="mt-3">
-            <TrackedLink
-              channel="call"
-              location="sars_footer"
-              href={site.phoneHref}
-              className="font-semibold text-ink hover:text-gold"
-            >
-              {site.phone}
-            </TrackedLink>
-          </p>
         </div>
       </Container>
       <div className="border-t border-border">
