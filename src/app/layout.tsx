@@ -4,6 +4,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { ChatWidget } from "@/components/chat/ChatWidget";
 import { site } from "@/lib/content";
@@ -59,13 +60,18 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <Header />
-        <main id="main-content" className="flex-1">
+        <SiteChrome
+          header={<Header />}
+          footer={<Footer />}
+          floating={
+            <>
+              <WhatsAppButton />
+              <ChatWidget />
+            </>
+          }
+        >
           {children}
-        </main>
-        <Footer />
-        <WhatsAppButton />
-        <ChatWidget />
+        </SiteChrome>
       </body>
       {shouldLoadGA && <GoogleAnalytics gaId={gaId as string} />}
     </html>

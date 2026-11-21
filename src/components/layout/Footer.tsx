@@ -122,7 +122,12 @@ export function Footer() {
       <div className="border-t border-white/10">
         <Container className="flex flex-col gap-2 py-6 text-xs text-on-navy/80 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 BizXcel Kuils River. All rights reserved.</p>
-          <p>SAIPA Member · Registered SARS Tax Practitioner</p>
+          <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span>SAIPA Member · Registered SARS Tax Practitioner</span>
+            <Link href="/privacy" className="underline underline-offset-2 hover:text-white">
+              Privacy notice
+            </Link>
+          </p>
         </Container>
       </div>
     </footer>

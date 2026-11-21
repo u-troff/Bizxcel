@@ -13,6 +13,7 @@ const staticPaths: Array<{
   { path: "/insights", changeFrequency: "weekly", priority: 0.7 },
   { path: "/faq", changeFrequency: "monthly", priority: 0.6 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/privacy", changeFrequency: "yearly", priority: 0.3 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
