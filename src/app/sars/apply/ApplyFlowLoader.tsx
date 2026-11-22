@@ -16,6 +16,19 @@ const ApplyFlow = dynamic(() => import("./ApplyFlow"), {
   ),
 });
 
-export default function ApplyFlowLoader() {
-  return <ApplyFlow />;
+/** The same frame at the size of the embedded card, so the page does not jump. */
+const EmbeddedApplyFlow = dynamic(() => import("./ApplyFlow"), {
+  ssr: false,
+  loading: () => (
+    <div
+      aria-hidden
+      className="min-h-[520px] overflow-hidden rounded-[10px] border border-border bg-white"
+    >
+      <div className="h-1.5 w-full bg-cream" />
+    </div>
+  ),
+});
+
+export default function ApplyFlowLoader({ embedded = false }: { embedded?: boolean }) {
+  return embedded ? <EmbeddedApplyFlow embedded /> : <ApplyFlow />;
 }

@@ -13,13 +13,15 @@ type WistiaVslProps = {
   title: string;
   /** Runtime shown under the video, e.g. "2:02". */
   duration?: string;
-  /** "4/5" suits portrait footage on a phone. "16/9" is landscape. */
-  aspect?: "4/5" | "16/9";
+  /** "9/16" is full-screen portrait footage, "4/5" a shorter portrait crop, "16/9" landscape. */
+  aspect?: "9/16" | "4/5" | "16/9";
   /** Turns on watch tracking, with this as the video name (e.g. "sars_vsl_v1"). */
   trackAs?: string;
 };
 
 const ASPECT = {
+  // Capped in width so a tall video still leaves room for the form on a phone.
+  "9/16": { ratio: 9 / 16, frame: "aspect-[9/16] max-w-[300px] sm:max-w-[340px]" },
   "4/5": { ratio: 4 / 5, frame: "aspect-[4/5] max-w-[480px]" },
   "16/9": { ratio: 16 / 9, frame: "aspect-video max-w-4xl" },
 } as const;
@@ -80,22 +82,31 @@ export default function WistiaVsl({
     // mute change to react to.
     const watched = ["mute-change", "volume-change", "play", "api-ready"];
     watched.forEach((e) => player.addEventListener(e, syncMuted));
-    // The first tap anywhere hands over sound. A tap is a user gesture, so
-    // browsers allow it, and the visitor chose to interact with the page.
+    // The first tap on the page hands over sound. A tap is a user gesture, so
+    // browsers allow it. Only while the video is on screen: the form sits below
+    // it, and answering a question must not start the video talking.
     const events = ["pointerdown", "touchstart", "keydown"] as const;
-    const onFirstGesture = () => {
+    const stopListening = () =>
       events.forEach((e) => window.removeEventListener(e, onFirstGesture));
-      if (!player.muted && player.volume > 0) return;
+    function onFirstGesture() {
+      if (!player) return;
+      if (!player.muted && player.volume > 0) {
+        stopListening();
+        return;
+      }
+      const { top, bottom } = player.getBoundingClientRect();
+      if (bottom <= 0 || top >= window.innerHeight) return;
+      stopListening();
       player.muted = false;
       player.volume = 1;
       void player.play?.();
-    };
+    }
     events.forEach((e) =>
-      window.addEventListener(e, onFirstGesture, { once: true, passive: true }),
+      window.addEventListener(e, onFirstGesture, { passive: true }),
     );
     return () => {
       watched.forEach((e) => player.removeEventListener(e, syncMuted));
-      events.forEach((e) => window.removeEventListener(e, onFirstGesture));
+      stopListening();
     };
   }, [isPlaceholder, syncMuted]);
 

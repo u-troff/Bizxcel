@@ -34,6 +34,11 @@ import { trackCustom, trackStandard } from "../track";
  *
  * Progress is kept in sessionStorage, so a reload (common inside the Facebook
  * and Instagram browsers) carries on where they were, with the same event id.
+ *
+ * `embedded` is for placing the flow inside another page (the /sars landing
+ * page) instead of using the whole screen: it drops the full-height layout,
+ * uses an h2 (the page already has its h1), scrolls back to the card as each
+ * question changes, and counts Apply_Start at the first answer, not at page load.
  */
 
 const STORAGE_KEY = "bizxcel_apply";
@@ -248,7 +253,7 @@ function ContactForm({
   );
 }
 
-export default function ApplyFlow() {
+export default function ApplyFlow({ embedded = false }: { embedded?: boolean }) {
   const router = useRouter();
   const [state, setState] = useState<Saved>(loadState);
   const [tapped, setTapped] = useState<string | null>(null);
@@ -261,20 +266,36 @@ export default function ApplyFlow() {
   const queue = useRef<Promise<void>>(Promise.resolve());
   const timers = useRef<number[]>([]);
   const startFired = useRef(state.startFired);
+  const rootRef = useRef<HTMLDivElement>(null);
+  // True once the visitor has moved the flow themselves. Stops the scroll below
+  // from running when the page first loads.
+  const interacted = useRef(false);
 
   useEffect(() => {
     const pending = timers.current;
     return () => pending.forEach((t) => window.clearTimeout(t));
   }, []);
 
-  // Apply_Start: once per visitor, however many times the page reloads.
+  // Apply_Start: once per visitor, however many times the page reloads. When
+  // embedded the form is on every page view, so it counts at the first answer.
   useEffect(() => {
-    if (startFired.current) return;
+    if (embedded || startFired.current) return;
     startFired.current = true;
     trackCustom("Apply_Start");
     latest.current = { ...latest.current, startFired: true };
     persist(latest.current);
-  }, []);
+  }, [embedded]);
+
+  // Embedded: keep the card in view as the question changes.
+  useEffect(() => {
+    if (!embedded || !interacted.current) return;
+    const el = rootRef.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top;
+    if (top >= 0 && top <= window.innerHeight * 0.5) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  }, [embedded, state.step]);
 
   function update(patch: Partial<Saved>): Saved {
     const next = { ...latest.current, ...patch };
@@ -292,6 +313,14 @@ export default function ApplyFlow() {
     const s = latest.current;
     const step = s.step + 1;
     const answers = { ...s.answers, [key]: value };
+
+    interacted.current = true;
+    if (!startFired.current) {
+      startFired.current = true;
+      trackCustom("Apply_Start");
+      latest.current = { ...latest.current, startFired: true };
+      persist(latest.current);
+    }
 
     trackCustom("Apply_Step", { step, key });
     // The tags go on every save: the server keeps the first ones it sees.
@@ -382,6 +411,7 @@ export default function ApplyFlow() {
 
   function back() {
     if (state.step === 0) return;
+    interacted.current = true;
     setTapped(null);
     update({ step: state.step - 1 });
   }
@@ -390,7 +420,14 @@ export default function ApplyFlow() {
   const progress = state.done ? 1 : state.step / total;
 
   return (
-    <div className="flex min-h-[calc(100dvh-57px)] flex-col sm:min-h-[calc(100dvh-65px)]">
+    <div
+      ref={rootRef}
+      className={
+        embedded
+          ? "flex scroll-mt-4 flex-col overflow-hidden rounded-[10px] border border-border bg-white text-left"
+          : "flex min-h-[calc(100dvh-57px)] flex-col sm:min-h-[calc(100dvh-65px)]"
+      }
+    >
       <div
         role="progressbar"
         aria-label="Progress"
@@ -405,7 +442,11 @@ export default function ApplyFlow() {
         />
       </div>
 
-      <div className="mx-auto w-full max-w-xl flex-1 px-5 pb-16 pt-5 sm:px-8 sm:pt-10">
+      <div
+        className={`mx-auto w-full max-w-xl flex-1 px-5 sm:px-8 ${
+          embedded ? "pb-8 pt-4 sm:pb-10 sm:pt-6" : "pb-16 pt-5 sm:pt-10"
+        }`}
+      >
         <div className="flex items-center justify-between">
           <button
             type="button"
@@ -437,10 +478,21 @@ export default function ApplyFlow() {
         </div>
 
         {/* key restarts the fade for every question */}
-        <div key={state.step} className="mt-6 motion-safe:animate-[fadeSlideUp_0.35s_ease-out] sm:mt-10">
-          <h1 className="text-[1.75rem] font-semibold leading-[1.15] text-ink sm:text-4xl">
-            {question.question}
-          </h1>
+        <div
+          key={state.step}
+          className={`motion-safe:animate-[fadeSlideUp_0.35s_ease-out] ${
+            embedded ? "mt-4 sm:mt-6" : "mt-6 sm:mt-10"
+          }`}
+        >
+          {embedded ? (
+            <h2 className="text-[1.75rem] font-semibold leading-[1.15] text-ink sm:text-4xl">
+              {question.question}
+            </h2>
+          ) : (
+            <h1 className="text-[1.75rem] font-semibold leading-[1.15] text-ink sm:text-4xl">
+              {question.question}
+            </h1>
+          )}
 
           <div className="mt-6 sm:mt-8">
             {question.kind === "choice" ? (
