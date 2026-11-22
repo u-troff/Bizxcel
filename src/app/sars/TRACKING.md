@@ -12,7 +12,7 @@ It accepts `Lead` and `Contact` only.
 |---|---|---|---|---|
 | `PageView` | standard | `layout.tsx` | Every /sars page load | none |
 | `VSL_Play`, `VSL_25` `VSL_40` `VSL_50` `VSL_75` `VSL_95` | custom | `useWistiaMilestones`, /sars | Playing with sound, at least half on screen, no seeks | once per page load |
-| `Apply_Start` | custom | `ApplyFlow`, /sars/apply | First visit to the question flow | once per visitor (sessionStorage) |
+| `Apply_Start` | custom | `ApplyFlow`, /sars (embedded) and /sars/apply | First answer on /sars (the form is on every page view, so page load is not a start). On /sars/apply, the first visit. | once per visitor (sessionStorage) |
 | `Apply_Step` `{ step, key }` | custom | `ApplyFlow` | Each answer, and the contact screen | per answer |
 | `Apply_JustLooking` | custom | `ApplyFlow` | Submitted with "Just looking" | once |
 | `Lead` | standard, browser + server | `ApplyFlow` | Submitted with "This week" or "This month" | the flow's `eventId`, also stored on the sars_leads row |
@@ -46,5 +46,5 @@ URL is the random `eid`. The server hashes them before they go to Meta.
 ## Testing
 
 1. Set `META_SARS_TEST_EVENT_CODE` and watch Events Manager > Test Events. Remove it before ads go live.
-2. Go through /sars/apply once with "This month" (Lead fires once, browser + server, deduplicated) and once with "Just looking" (no Lead).
+2. Go through the form on /sars once with "This month" (Lead fires once, browser + server, deduplicated) and once with "Just looking" (no Lead).
 3. Check the two rows in `sars_leads`, and the lead in the CRM pipeline.

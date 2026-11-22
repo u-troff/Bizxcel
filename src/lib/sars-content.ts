@@ -16,6 +16,11 @@ export const hero = {
   ctaNote: "Takes about a minute. Then we WhatsApp you. Free, no obligation.",
 };
 
+/** The headline above the embedded form. {{gold}} markers are rendered by RichText. */
+export const formSection = {
+  title: "{{Fill in the form}} below to check where you stand.",
+};
+
 export interface Testimonial {
   /** Wistia media ID. Items starting with TODO are hidden. */
   videoId: string;
@@ -26,11 +31,25 @@ export interface Testimonial {
   portrait?: boolean;
 }
 
-/** [YOU] Replace with real Wistia IDs once the testimonial cards are made. */
+/**
+ * Real Wistia videos. Label is business type and area only: add a first name
+ * only with the client's written consent. Duration and poster come from Wistia.
+ */
 export const testimonials: Testimonial[] = [
-  { videoId: "TODO_TESTIMONIAL_1", label: "Business owner, Cape Town", duration: "0:20", portrait: true },
-  { videoId: "TODO_TESTIMONIAL_2", label: "Employer, Kuils River", duration: "0:20", portrait: true },
-  { videoId: "TODO_TESTIMONIAL_3", label: "Side business, Northern suburbs", duration: "0:20", portrait: true },
+  {
+    videoId: "pefvhrb7lg",
+    label: "Client testimonial",
+    duration: "0:41",
+    poster:
+      "https://embed-ssl.wistia.com/deliveries/461b928aa946e8338e5848f546fb18b0.jpg?image_crop_resized=960x540",
+  },
+  {
+    videoId: "a8nbzyceds",
+    label: "Client testimonial",
+    duration: "1:06",
+    poster:
+      "https://embed-ssl.wistia.com/deliveries/11ceca5d28dd9f9296923d4238263faa.jpg?image_crop_resized=960x540",
+  },
 ];
 
 export const testimonialsSection = {

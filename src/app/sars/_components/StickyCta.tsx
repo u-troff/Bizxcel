@@ -2,26 +2,40 @@
 
 import { useEffect, useState } from "react";
 
+import { Button } from "@/components/ui/Button";
 import { hero } from "@/lib/sars-content";
-import ApplyCta from "./ApplyCta";
 
 /**
- * Bottom bar with the one button. Hidden while the hero button is on screen
- * or still below it, shown once the hero button has scrolled away upwards.
+ * Bottom bar with the one button. It appears once the video has scrolled out
+ * of view upwards, hides while the form is on screen, and scrolls to the form.
  */
-export default function StickyCta({ heroCtaId }: { heroCtaId: string }) {
-  const [show, setShow] = useState(false);
+export default function StickyCta({ vslId, formId }: { vslId: string; formId: string }) {
+  const [pastVsl, setPastVsl] = useState(false);
+  const [formVisible, setFormVisible] = useState(false);
 
   useEffect(() => {
-    const target = document.getElementById(heroCtaId);
-    if (!target) return;
+    const vsl = document.getElementById(vslId);
+    const form = document.getElementById(formId);
+    if (!vsl || !form) return;
 
-    const observer = new IntersectionObserver(([entry]) => {
-      setShow(!entry.isIntersecting && entry.boundingClientRect.bottom < 0);
+    const vslObserver = new IntersectionObserver(([entry]) => {
+      // Past the video means it has left the screen upwards, not that it has
+      // not scrolled into view yet.
+      setPastVsl(!entry.isIntersecting && entry.boundingClientRect.bottom < 0);
     });
-    observer.observe(target);
-    return () => observer.disconnect();
-  }, [heroCtaId]);
+    const formObserver = new IntersectionObserver(([entry]) => {
+      setFormVisible(entry.isIntersecting);
+    });
+
+    vslObserver.observe(vsl);
+    formObserver.observe(form);
+    return () => {
+      vslObserver.disconnect();
+      formObserver.disconnect();
+    };
+  }, [vslId, formId]);
+
+  const show = pastVsl && !formVisible;
 
   return (
     <div
@@ -32,7 +46,18 @@ export default function StickyCta({ heroCtaId }: { heroCtaId: string }) {
       }`}
     >
       <div className="mx-auto max-w-md">
-        <ApplyCta className="w-full py-4 text-base">{hero.cta}</ApplyCta>
+        <Button
+          type="button"
+          className="w-full py-4 text-base"
+          onClick={() => {
+            const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            document
+              .getElementById(formId)
+              ?.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+          }}
+        >
+          {hero.cta}
+        </Button>
       </div>
     </div>
   );

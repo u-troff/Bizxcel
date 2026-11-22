@@ -116,21 +116,48 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
           type="button"
           onClick={() => setPlaying(true)}
           aria-label={`${ui.playTestimonial}: ${label}`}
-          className="group absolute inset-0 flex flex-col items-center justify-end gap-3 p-4 text-left"
-          style={poster ? { backgroundImage: `url(${poster})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
+          className={`group absolute inset-0 ${
+            poster ? "" : "flex flex-col items-center justify-end gap-3 p-4 text-left"
+          }`}
+          style={
+            poster
+              ? { backgroundImage: `url(${poster})`, backgroundSize: "cover", backgroundPosition: "center" }
+              : undefined
+          }
         >
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gold text-white transition-colors group-hover:bg-gold-hover">
-            <svg viewBox="0 0 24 24" className="ml-0.5 h-6 w-6" fill="currentColor" aria-hidden="true">
-              <path d="M8 5v14l11-7L8 5Z" />
-            </svg>
-          </span>
-          <span className="w-full font-sans text-sm font-medium text-white">
-            {label}
-            <span className="block text-xs text-on-navy">{duration}</span>
-          </span>
+          {poster ? (
+            // The thumbnail is already a designed card, so keep the text off it:
+            // a small play button in the corner and the length at the top.
+            <>
+              <span className="absolute right-3 top-3 rounded-full bg-navy/85 px-2.5 py-1 font-sans text-xs font-semibold text-white">
+                {duration}
+              </span>
+              <span className="absolute bottom-3 right-3 flex h-12 w-12 items-center justify-center rounded-full bg-gold text-white shadow-md transition-colors group-hover:bg-gold-hover">
+                <PlayIcon />
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gold text-white transition-colors group-hover:bg-gold-hover">
+                <PlayIcon />
+              </span>
+              <span className="w-full font-sans text-sm font-medium text-white">
+                {label}
+                <span className="block text-xs text-on-navy">{duration}</span>
+              </span>
+            </>
+          )}
         </button>
       )}
     </div>
+  );
+}
+
+function PlayIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="ml-0.5 h-5 w-5" fill="currentColor" aria-hidden="true">
+      <path d="M8 5v14l11-7L8 5Z" />
+    </svg>
   );
 }
 
